@@ -1,2 +1,2 @@
 # battery-status
-Battery Status API implementation
+W3C [Battery Status API](https://www.w3.org/TR/battery-status/) implementation
