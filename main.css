@@ -1,0 +1,18 @@
+html {
+  font-size: 62.5%;
+  line-height: 1.15;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 1.6rem;
+}
+
+a {
+  -webkit-text-decoration-skip: objects;
+}
+
+a:active, a:hover {
+  outline: none;
+}
