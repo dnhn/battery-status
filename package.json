@@ -1,0 +1,22 @@
+{
+  "name": "battery-status",
+  "version": "1.0.0",
+  "description": "W3C Battery Status API",
+  "main": "server.js",
+  "dependencies": {
+    "express": "4.14.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nhantdn/battery-status.git"
+  },
+  "author": "Nhan To-Doan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nhantdn/battery-status/issues"
+  },
+  "homepage": "https://github.com/nhantdn/battery-status#readme"
+}
