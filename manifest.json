@@ -1,0 +1,12 @@
+{
+  "short_name": "Battery Status",
+  "name": "W3C Battery Status API",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "bs.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ]
+}
