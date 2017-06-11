@@ -20,6 +20,8 @@
 <link rel="apple-touch-icon" sizes="76x76" href="asset/bs.png">
 <link rel="apple-touch-icon" sizes="152x152" href="asset/bs.png">
 
+<link rel="manifest" href="manifest.json">
+
 <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
 <script>
 WebFont.load({
@@ -37,26 +39,45 @@ WebFont.load({
 </head>
 <body>
 
-<nav></nav>
+<div class="body-wrapper">
+  <nav>
+    <ul>
+      <li><a href="#">
+        <span class="underline-hover">About</span>
+      </a></li>
+      <li><a href="https://github.com/nhantdn/battery-status" target="_blank">
+        <span class="underline-hover">View on GitHub</span>
+      </a></li>
+    </ul>
+  </nav>
 
-<header></header>
-
-<main>
-  <section>
-    <span id="js-isCharging"></span>
-  </section>
-  <section>
-    <span>Remaining time:&nbsp;</span><span id="js-chargingTime"></span><span id="js-dischargingTime"></span>
-  </section>
-  <section>
-    <span>Level:&nbsp;</span><span id="js-level"></span>
-  </section>
-  <div id="js-battery" class="battery">
-    <div class="battery--inner"></div>
-  </div>
-</main>
-
-<footer></footer>
+  <main>
+    <div class="about"></div>
+    <header>
+      <section>
+        <span id="js-isCharging"></span>
+      </section>
+      <section>
+        <span>Remaining</span>
+        <span id="js-remainingTime"></span>
+      </section>
+      <section>
+        <span>Level</span>
+        <span id="js-level"></span>
+      </section>
+    </header>
+    <div id="js-battery" class="battery">
+      <i class="material-icons battery__icon battery__icon--minus">remove_circle</i>
+      <div id="js-battery-wrapper" class="battery__wrapper">
+        <div id="js-battery-inner" class="battery__inner"></div>
+      </div>
+      <i class="material-icons battery__icon battery__icon--plus">add_circle</i>
+    </div>
+    <footer>
+      <span>Crafted with</span><i class="material-icons heart">favorite</i><span>by <a href="https://nhantdn.github.com" class="underline" target="_blank">Nhan To-Doan</a></span>
+    </footer>
+  </main>
+</div>
 
 </body>
 </html>

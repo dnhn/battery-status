@@ -1,65 +1,101 @@
-(function() {
+(function () {
   "use strict";
 
-  navigator.getBattery().then(
-    function(battery) {
+  var verticalOrientation = false;
+  var BS = {
+    data: {},
+    apiSupported: function () {
+      return (navigator.getBattery ||
+        navigator.battery ||
+        navigator.mozBattery ||
+        navigator.webkitBattery ||
+        navigator.msBattery);
+    },
+    init: function () {
+      navigator.getBattery().then(
+        function (b) {
+          BS.updateData(b);
+          BS.display();
 
-      batteryInfo();
+          b.addEventListener("chargingchange", function () {
+            navigator.vibrate(200);
+            BS.updateData(b);
+            BS.display();
+          });
 
-      function batteryInfo() {
-        isCharging();
-        chargingTime();
-        dischargingTime();
-        level();
-      }
+          b.addEventListener("chargingtimechange", function () {
+            BS.updateData(b);
+            BS.display();
+          });
 
-      function isCharging() {
-        console.log("battery.charging", battery.charging);
-        var batteryCharging = (battery.charging) ? "Yes" : "No";
-        document.getElementById("js-isCharging").textContent = batteryCharging;
-      }
-      function chargingTime() {
-        console.log("battery.chargingTime", battery.chargingTime);
-        var chargingTime = battery.chargingTime, returnStr = "";
-        if(chargingTime == 0) {
-          returnStr = "Full";
-        } else if (chargingTime == Infinity) {
-          returnStr = "0";
-        } else {
-          returnStr = chargingTime + " seconds";
+          b.addEventListener("dischargingtimechange", function () {
+            BS.updateData(b);
+            BS.display();
+          });
+
+          b.addEventListener("levelchange", function () {
+            navigator.vibrate(200);
+            BS.updateData(b);
+            BS.display();
+          });
         }
-        document.getElementById("js-chargingTime").textContent = returnStr;
-      }
-      function dischargingTime() {
-        console.log("battery.dischargingTime", battery.dischargingTime);
-        var dischargingTime = battery.dischargingTime, returnStr = "";
-        if(dischargingTime == Infinity) {
-          returnStr = "Charging";
-        } else {
-          returnStr = dischargingTime + " seconds";
-        }
-        document.getElementById("js-dischargingTime").textContent = returnStr;
-      }
-      function level() {
-        console.log("battery.level", battery.level);
-        var level = (battery.level * 100) + "%";
-        document.getElementById("js-level").textContent = level;
-      }
-
-      battery.addEventListener("chargingchange", function() {
-        batteryInfo();
-      });
-      battery.addEventListener("chargingtimechange", function() {
-        batteryInfo();
-      });
-      battery.addEventListener("dischargingtimechange", function() {
-        batteryInfo();
-      });
-      battery.addEventListener("levelchange", function() {
-        batteryInfo();
-      });
-
+      );
+    },
+    display: function () {
+      document.getElementById("js-isCharging").textContent = BS.data.charging ?
+        "Charging" : "Discharging";
+      document.getElementById("js-remainingTime").textContent = BS.data.charging ?
+        minSec(BS.data.chargingTime) : minSec(BS.data.dischargingTime);
+      document.getElementById("js-level").textContent = BS.data.level + "%";
+    },
+    updateData: function (b) {
+      BS.data.charging = b.charging;
+      BS.data.chargingTime =
+        b.chargingTime !== Infinity ? b.chargingTime : 0;
+      BS.data.dischargingTime =
+        b.dischargingTime !== Infinity ? b.dischargingTime : 0;
+      BS.data.level = Math.round(b.level * 100);
     }
-  );
+  };
+
+  function minSec(sec) {
+    var formatted = "";
+    if (!sec) {
+      // Invalid data
+      formatted = "";
+    } else if (sec < 60) {
+      // Less than 60 seconds
+      formatted = sec + "s";
+    } else if (sec % 60 === 0) {
+      // Round minutes
+      var mmin = sec / 60;
+      formatted = mmin + "m";
+    } else {
+      // Minutes and remain seconds
+      var msec = sec % 60,
+        min = (sec - msec) / 60;
+      formatted = min + "m " + msec + "s";
+    }
+    return formatted;
+  }
+
+  function checkOrientation() {
+    verticalOrientation = window.innerWidth <= 800;
+  }
+
+  function resizeBattery() {
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    checkOrientation();
+    if (BS.apiSupported()) {
+      BS.init();
+    }
+    resizeBattery();
+    window.addEventListener("resize", function () {
+      checkOrientation();
+      resizeBattery();
+    });
+  });
 
 })();
