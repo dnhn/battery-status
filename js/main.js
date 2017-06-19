@@ -2,6 +2,14 @@
   "use strict";
 
   var verticalOrientation = false;
+  var ID = {
+    isCharge: undefined,
+    remainTime: undefined,
+    level: undefined,
+    batt: undefined,
+    battWrap: undefined,
+    battInn: undefined
+  };
   var BS = {
     data: {},
     apiSupported: function () {
@@ -42,11 +50,19 @@
       );
     },
     display: function () {
-      document.getElementById("js-isCharging").textContent = BS.data.charging ?
+      ID.isCharge.textContent = BS.data.charging ?
         "Charging" : "Discharging";
-      document.getElementById("js-remainingTime").textContent = BS.data.charging ?
-        minSec(BS.data.chargingTime) : minSec(BS.data.dischargingTime);
-      document.getElementById("js-level").textContent = BS.data.level + "%";
+      ID.remainTime.textContent = BS.data.charging ?
+        hms(BS.data.chargingTime) : hms(BS.data.dischargingTime);
+      ID.level.textContent = BS.data.level + "%";
+      if (verticalOrientation) {
+        ID.battWrap.style.width = "";
+        ID.battWrap.style.height = BS.data.level + "%";
+      } else {
+        ID.battWrap.style.height = "";
+        ID.battWrap.style.width = BS.data.level + "%";
+      }
+      resizeBattery();
     },
     updateData: function (b) {
       BS.data.charging = b.charging;
@@ -58,7 +74,7 @@
     }
   };
 
-  function minSec(sec) {
+  function hms(sec) {
     var formatted = "";
     if (!sec) {
       // Invalid data
@@ -66,36 +82,67 @@
     } else if (sec < 60) {
       // Less than 60 seconds
       formatted = sec + "s";
-    } else if (sec % 60 === 0) {
-      // Round minutes
-      var mmin = sec / 60;
-      formatted = mmin + "m";
-    } else {
-      // Minutes and remain seconds
-      var msec = sec % 60,
-        min = (sec - msec) / 60;
-      formatted = min + "m " + msec + "s";
+    } else if (sec >= 60 && sec < 3600) {
+      if (sec % 60 === 0) {
+        // Round minutes
+        var mmin = sec / 60;
+        formatted = mmin + "m";
+      } else {
+        // Minutes, seconds
+        var msec = sec % 60,
+          min = (sec - msec) / 60;
+        formatted = min + "m " + msec + "s";
+      }
+    } else if (sec >= 3600) {
+      if (sec % 3600) {
+        // Round hours
+        var hhr = sec / 3600;
+        formatted = hhr + "h";
+      } else {
+        // TODO: Hours, minutes, seconds
+        var hr = sec / 3600;
+        formatted = hr + "h";
+      }
     }
     return formatted;
   }
 
   function checkOrientation() {
-    verticalOrientation = window.innerWidth <= 800;
+    verticalOrientation =
+      document.documentElement.clientHeight >
+      document.documentElement.clientWidth &&
+      document.documentElement.clientWidth <= 800;
   }
 
   function resizeBattery() {
+    if (verticalOrientation) {
+      ID.batt.style.width = (ID.batt.clientHeight / 21 * 9) + "px";
+      ID.battInn.style.height = ID.batt.clientHeight + "px";
+    } else {
+      ID.batt.style.width = "";
+      ID.battInn.style.height = "";
+    }
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    ID = {
+      isCharge: document.getElementById("js-isCharging"),
+      remainTime: document.getElementById("js-remainingTime"),
+      level: document.getElementById("js-level"),
+      batt: document.getElementById("js-battery"),
+      battWrap: document.getElementById("js-battery-wrapper"),
+      battInn: document.getElementById("js-battery-inner")
+    };
     checkOrientation();
     if (BS.apiSupported()) {
       BS.init();
+      window.addEventListener("resize", function () {
+        checkOrientation();
+        BS.display();
+      });
+    } else {
+      // TODO: Battery Status API is not supported
     }
-    resizeBattery();
-    window.addEventListener("resize", function () {
-      checkOrientation();
-      resizeBattery();
-    });
   });
 
 })();
