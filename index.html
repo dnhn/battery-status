@@ -46,19 +46,23 @@ WebFont.load({ google: { families: ["Anonymous Pro", "Material Icons"] } });
     </ul>
   </nav>
 
-  <main>
+  <main id="js-main">
     <div class="about"></div>
     <header>
-      <section>
+      <section class="header__field">
         <span id="js-isCharging"></span>
       </section>
-      <section>
+      <section class="header__field">
         <span>Remaining</span>
         <span id="js-remainingTime"></span>
       </section>
-      <section>
+      <section class="header__field">
         <span>Level</span>
         <span id="js-level"></span>
+      </section>
+      <section class="header__message">
+        <span class="header__message__text header__message__text--warn">Low battery</span>
+        <span class="header__message__text header__message__text--off">Critical battery</span>
       </section>
     </header>
     <div id="js-battery" class="battery">
@@ -67,6 +71,11 @@ WebFont.load({ google: { families: ["Anonymous Pro", "Material Icons"] } });
         <div id="js-battery-inner" class="battery__inner"></div>
       </div>
       <i class="material-icons battery__icon battery__icon--plus">&#xE147;</i>
+      <div class="battery__message">
+        <i id="js-battery-full" class="material-icons battery__message__icon battery__message__icon--full">&#xE1A3;</i>
+        <i id="js-battery-warn" class="material-icons battery__message__icon battery__message__icon--warn">&#xE002;</i>
+        <i id="js-battery-off" class="material-icons battery__message__icon battery__message__icon--off">&#xE8AC;</i>
+      </div>
     </div>
     <footer>
       <span>Crafted with</span><i class="material-icons heart">&#xE87D;</i><span>by <a href="https://nhantdn.github.com" class="underline" target="_blank">Nhan To-Doan</a></span>

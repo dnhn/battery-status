@@ -3,6 +3,7 @@
 
   var verticalOrientation = false;
   var ID = {
+    main: undefined,
     isCharge: undefined,
     remainTime: undefined,
     level: undefined,
@@ -54,6 +55,18 @@
         "Charging" : "Discharging";
       ID.remainTime.textContent = BS.data.charging ?
         hms(BS.data.chargingTime) : hms(BS.data.dischargingTime);
+      ID.main.classList.remove(
+        "status--full",
+        "status--warn",
+        "status--off"
+      );
+      if (BS.data.charging) {
+        ID.main.classList.add("status--full");
+      } else if (BS.data.level <= 25 && BS.data.level > 5) {
+        ID.main.classList.add("status--warn");
+      } else if (BS.data.level <= 5) {
+        ID.main.classList.add("status--off");
+      }
       ID.level.textContent = BS.data.level + "%";
       if (verticalOrientation) {
         ID.battWrap.style.width = "";
@@ -94,14 +107,17 @@
         formatted = min + "m " + msec + "s";
       }
     } else if (sec >= 3600) {
-      if (sec % 3600) {
+      if (sec % 3600 === 0) {
         // Round hours
         var hhr = sec / 3600;
         formatted = hhr + "h";
       } else {
         // TODO: Hours, minutes, seconds
-        var hr = sec / 3600;
-        formatted = hr + "h";
+        var hr = (sec - (sec % 3600)) / 3600,
+          hsec = sec - (hr * 3600),
+          hhsec = hsec % 60,
+          hmin = (hsec - (hhsec % 60)) / 60;
+        formatted = hr + "h " + hmin + "m " + hhsec + "s";
       }
     }
     return formatted;
@@ -126,6 +142,7 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     ID = {
+      main: document.getElementById("js-main"),
       isCharge: document.getElementById("js-isCharging"),
       remainTime: document.getElementById("js-remainingTime"),
       level: document.getElementById("js-level"),

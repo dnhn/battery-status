@@ -87,17 +87,83 @@ nav a:hover {
 }
 
 header {
+  position: relative;
   padding: .75em;
   display: flex;
   font-size: 1.5rem;
 }
 
-header section {
+.header__field {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.header__message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.header__message__text {
+  display: none;
+}
+
+.status--warn .header__field {
+  animation: fieldFade 2.5s ease-out infinite;
+}
+
+.status--warn .header__message {
+  animation: msgFade 2.5s ease-out infinite;
+}
+
+.status--warn .header__message__text--warn {
+  display: block;
+}
+
+.status--off .header__field {
+  animation: fieldFade 1.5s ease-out infinite;
+}
+
+.status--off .header__message {
+  animation: msgFade 1.5s ease-out infinite;
+}
+
+.status--off .header__message__text--off {
+  display: block;
+}
+
+@keyframes fieldFade {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes msgFade {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 main {
@@ -115,7 +181,9 @@ main {
   height: 100%;
   overflow: hidden;
   border: .25em solid;
+  border-radius: .4em;
   box-shadow: 0 15px 15px -10px #000;
+  background-color: #334;
 }
 
 .battery__icon {
@@ -134,12 +202,12 @@ main {
   width: 0;
   height: 100%;
   overflow: hidden;
-  transition: width .5s ease-out;
+  transition: width .5s cubic-bezier(0, 0, 0.5, 1.5);
 }
 
 .battery__inner {
   width: 24.5em;
-  height: 7em;
+  height: 6em;
   background-image: linear-gradient(
     90deg,
     red,
@@ -150,8 +218,58 @@ main {
   );
 }
 
+.battery__message {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0 5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.battery__message__icon {
+  display: none;
+  font-size: 5rem;
+}
+
+.battery__message__icon.active {
+  display: block;
+}
+
+.battery__message__icon--warn {
+  animation: blink 2.5s ease-out infinite;
+}
+
+.battery__message__icon--off {
+  animation: blink 1.5s ease-out infinite;
+}
+
+.status--full .battery__message__icon--full,
+.status--warn .battery__message__icon--warn,
+.status--off .battery__message__icon--off {
+  display: block;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 footer {
-  padding: 1rem;
+  padding: 1.75em;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -194,6 +312,7 @@ footer a {
     text-align: center;
   }
   header {
+    padding: 1.5em .75em;
     font-size: 1rem;
   }
   main {
@@ -225,7 +344,7 @@ footer a {
     height: 0;
     display: flex;
     align-items: flex-end;
-    transition: height .5s ease-out;
+    transition: height .5s cubic-bezier(0, 0, 0.5, 1.5);
   }
   .battery__inner {
     width: 100%;
@@ -239,7 +358,11 @@ footer a {
       blue
     );
   }
+  .battery__message {
+    margin: 3em 0;
+  }
   footer {
+    padding: 2.5em;
     text-align: center;
   }
 }
