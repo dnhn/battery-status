@@ -278,7 +278,7 @@ footer {
 }
 
 footer .heart {
-  cursor: none;
+  cursor: default;
   margin: 0 .25em;
   color: deeppink;
   animation: heartbeat 1.75s ease-in-out infinite;
